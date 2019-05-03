@@ -66,7 +66,7 @@ function sendStayingUsers(users) {
 
     console.log(users);
     request.get({
-        url: 'http://127.0.0.1:8000/room/update',
+        url: 'https://slackbot-extensions-master.herokuapp.com/room/update',
         qs: {
             ids: ids,
             names: names

@@ -33,5 +33,3 @@ schedule.scheduleJob({
 }, function () {
     room.getStayingUsers(users);
 });
-
-room.getStayingUsers(users);

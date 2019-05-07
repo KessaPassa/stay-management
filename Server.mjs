@@ -29,7 +29,8 @@ let users = usersSettings.setup();
 
 // 時限式で強制ログアウト
 schedule.scheduleJob({
-    minute: [...Array(6).keys()].map(i => i * 10)
+    minute: [...Array(12).keys()].map(i => i * 5)
 }, function () {
     room.getStayingUsers(users);
 });
+room.getStayingUsers(users);

@@ -43,9 +43,15 @@ function convertMacAddressToUser(users, stayingMacAdress) {
         let stayingUsers = [];
         users.forEach(function (user) {
             user.macAddress.forEach(function (macAddress) {
-                let isInclude = stayingMacAdress.includes(macAddress);
-                if (isInclude) {
+                // let isInclude = stayingMacAdress.includes(macAddress);
+                // if (isInclude) {
+                //     stayingUsers.push(user);
+                // }
+                let index = stayingMacAdress.indexOf(macAddress);
+                if (index !== -1) {
                     stayingUsers.push(user);
+                    // 在室端末のMACアドレスのみ表示
+                    console.log(stayingMacAdress[index]);
                 }
             });
         });
@@ -64,7 +70,6 @@ function sendStayingUsers(users) {
         names.push(user.name);
     });
 
-    console.log(users);
     request.get({
         url: 'https://slackbot-extensions-master.herokuapp.com/room/update',
         qs: {
@@ -76,11 +81,8 @@ function sendStayingUsers(users) {
 
 export async function getStayingUsers(users) {
     await nmap();
-    console.log('nmap完了');
     const stayingMacAdress = await arp();
-    console.log('arp完了');
     const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);
-    // console.log(stayingUsers);
     sendStayingUsers(stayingUsers);
 }
 

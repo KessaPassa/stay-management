@@ -56,9 +56,12 @@ function convertMacAddressToUser(users, stayingMacAdress) {
             });
         });
 
-        // 現時刻とマッチしたMACアドレスを表示
-        console.log(dateformat(new Date(), 'yyyy年mm月dd日 HH時MM分ss秒'));
-        console.log(matchedMacAddress);
+        // マッチしたMACアドレスがあるなら表示する
+        if (matchedMacAddress) {
+            // 現時刻とマッチしたMACアドレスを表示
+            console.log(dateformat(new Date(), 'yyyy年mm月dd日 HH時MM分ss秒'));
+            console.log(matchedMacAddress);
+        }
 
         // 複数端末がWi-Fiに接続していると重複するので、重複を削除
         stayingUsers = Array.from(new Set(stayingUsers));
@@ -85,9 +88,6 @@ function sendStayingUsers(users) {
 }
 
 export async function getStayingUsers(users) {
-    let nowTime = dateformat(new Date(), 'yyyy年mm月dd日 HH時MM分ss秒');
-    console.log(nowTime);
-
     await nmap();
     const stayingMacAdress = await arp();
     const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);

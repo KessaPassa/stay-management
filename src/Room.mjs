@@ -1,4 +1,6 @@
 import {exec} from 'child_process';
+import dateformat from 'dateformat';
+
 
 function nmap() {
     return new Promise(function (resolve) {
@@ -40,21 +42,24 @@ function arp() {
 
 function convertMacAddressToUser(users, stayingMacAdress) {
     return new Promise(function (resolve) {
+
         let stayingUsers = [];
+        let matchedMacAddress = [];
         users.forEach(function (user) {
             user.macAddress.forEach(function (macAddress) {
-                // let isInclude = stayingMacAdress.includes(macAddress);
-                // if (isInclude) {
-                //     stayingUsers.push(user);
-                // }
                 let index = stayingMacAdress.indexOf(macAddress);
                 if (index !== -1) {
                     stayingUsers.push(user);
-                    // 在室端末のMACアドレスのみ表示
-                    console.log(stayingMacAdress[index]);
+                    // 在室端末のMACアドレスのみ表示するために
+                    matchedMacAddress.push(stayingMacAdress[index]);
                 }
             });
         });
+
+        // 現時刻とマッチしたMACアドレスを表示
+        console.log(dateformat(new Date(), 'yyyy年mm月dd日 HH時MM分ss秒'));
+        console.log(matchedMacAddress);
+
         // 複数端末がWi-Fiに接続していると重複するので、重複を削除
         stayingUsers = Array.from(new Set(stayingUsers));
         resolve(stayingUsers);
@@ -80,6 +85,9 @@ function sendStayingUsers(users) {
 }
 
 export async function getStayingUsers(users) {
+    let nowTime = dateformat(new Date(), 'yyyy年mm月dd日 HH時MM分ss秒');
+    console.log(nowTime);
+
     await nmap();
     const stayingMacAdress = await arp();
     const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);

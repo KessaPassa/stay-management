@@ -27,7 +27,7 @@ import * as usersSettings from './src/UsersSettings';
 
 let users = usersSettings.setup();
 
-// 時限式で強制ログアウト
+// 時限式で実行
 schedule.scheduleJob({
     minute: [...Array(12).keys()].map(i => i * 5)
 }, function () {

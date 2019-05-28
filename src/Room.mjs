@@ -43,13 +43,14 @@ function arp() {
 function convertMacAddressToUser(users, stayingMacAdress) {
     return new Promise(function (resolve) {
 
-        let stayingUsers = [];
+        // 複数端末がWi-Fiに接続しているとuserが重複するので、重複を削除するためにSet()
+        let stayingUsers = new Set();
         let matchedMacAddress = [];
         users.forEach(function (user) {
             user.macAddress.forEach(function (macAddress) {
                 let index = stayingMacAdress.indexOf(macAddress);
                 if (index !== -1) {
-                    stayingUsers.push(user);
+                    stayingUsers.add(user);
                     // 在室端末のMACアドレスのみ表示するために
                     matchedMacAddress.push(stayingMacAdress[index]);
                 }
@@ -63,8 +64,6 @@ function convertMacAddressToUser(users, stayingMacAdress) {
             console.log(matchedMacAddress);
         }
 
-        // 複数端末がWi-Fiに接続していると重複するので、重複を削除
-        stayingUsers = Array.from(new Set(stayingUsers));
         resolve(stayingUsers);
     });
 }
@@ -88,10 +87,16 @@ function sendStayingUsers(users) {
 }
 
 export async function getStayingUsers(users) {
-    await nmap();
-    const stayingMacAdress = await arp();
-    const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);
-    sendStayingUsers(stayingUsers);
+    // ここ？でエラーが起きて落ちるっぽいのでtry文
+    try {
+        await nmap();
+        const stayingMacAdress = await arp();
+        const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);
+        sendStayingUsers(stayingUsers);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 
 

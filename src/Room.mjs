@@ -87,16 +87,10 @@ function sendStayingUsers(users) {
 }
 
 export async function getStayingUsers(users) {
-    // ここ？でエラーが起きて落ちるっぽいのでtry文
-    try {
-        await nmap();
-        const stayingMacAdress = await arp();
-        const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);
-        sendStayingUsers(stayingUsers);
-    }
-    catch (e) {
-        console.log(e);
-    }
+    await nmap();
+    const stayingMacAdress = await arp();
+    const stayingUsers = await convertMacAddressToUser(users, stayingMacAdress);
+    sendStayingUsers(stayingUsers);
 }
 
 

@@ -84,8 +84,10 @@ function sendStayingUsers(users) {
             names: names
         }
     }, function (err, res, body) {
-        console.log('通信エラー');
-        console.log(err);
+        if (err) {
+            console.log('通信エラー');
+            console.log(err);
+        }
     });
 }
 

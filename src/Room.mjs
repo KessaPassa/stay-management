@@ -83,6 +83,9 @@ function sendStayingUsers(users) {
             ids: ids,
             names: names
         }
+    }, function (err, res, body) {
+        console.log('通信エラー');
+        console.log(err);
     });
 }
 
